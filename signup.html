@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Professional Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .decoration {
+            position: absolute;
+            z-index: 0;
+            border-radius: 50%;
+            opacity: 0.1;
+            filter: blur(60px);
+        }
+
+        .decoration:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: #ff6b6b;
+            top: 10%;
+            left: 10%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .decoration:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: #ff8e53;
+            bottom: 5%;
+            right: 10%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .decoration:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            background: #4cc9f0;
+            top: 40%;
+            right: 15%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 50px 40px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border-radius: 2px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .flashed-messages {
+            margin-bottom: 25px;
+        }
+
+        .flashed-messages p {
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .error-message {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border-left: 4px solid #dc3545;
+        }
+
+        .success-message {
+            background-color: rgba(25, 135, 84, 0.1);
+            color: #198754;
+            border-left: 4px solid #198754;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+            animation: fadeIn 0.6s ease-out;
+            animation-fill-mode: backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.2s; }
+        .form-group:nth-child(2) { animation-delay: 0.3s; }
+        .form-group:nth-child(3) { animation-delay: 0.4s; }
+        .form-group:nth-child(4) { animation-delay: 0.5s; }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff6b6b;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px 20px 18px 55px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+            color: #333;
+            outline: none;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        input::placeholder {
+            color: #9e9e9e;
+        }
+
+        input:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.15);
+            background: #fff;
+        }
+
+        input:focus + i {
+            color: #ff8e53;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        button:hover::after {
+            transform: translateX(100%);
+        }
+
+        .switch-text {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .switch-text a {
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .switch-text a:hover {
+            color: #ff8e53;
+        }
+
+        .switch-text a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #ff6b6b;
+            bottom: -2px;
+            left: 0;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .switch-text a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 25px;
+            }
+            
+            .logo h1 {
+                font-size: 28px;
+            }
+            
+            .form-header h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    <div class="decoration"></div>
+    
+    <div class="container">
+        <div class="logo">
+            <h1>Price Wise</h1>
+            
+        </div>
+        
+        <div class="form-header">
+            <h2>Create Account</h2>
+            <p>Join our community of professionals</p>
+        </div>
+        
+        <div class="flashed-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <p class="{{ category }}-message">{{ message }}</p>
+                {% endfor %}
+            {% endwith %}
+        </div>
+        
+        <form method="post">
+            <div class="form-group">
+                <div class="input-with-icon">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-with-icon">
+                    <i class="fas fa-phone"></i>
+                    <input type="text" name="phno" placeholder="Phone Number" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-with-icon">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+            </div>
+            
+            <button type="submit">
+                <i class="fas fa-user-plus"></i> Sign Up
+            </button>
+        </form>
+        
+        <div class="switch-text">
+            <p>Already have an account? <a href="/login">Login</a></p>
+        </div>
+    </div>
+</body>
+</html>

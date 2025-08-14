@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Price Comparison</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --dark: #1d3557;
+            --light: #f1faee;
+            --success: #2ec4b6;
+            --warning: #ff9f1c;
+            --danger: #e63946;
+            --card-bg: #ffffff;
+            --text-dark: #1d3557;
+            --text-light: #457b9d;
+            --amazon: linear-gradient(135deg, #ff9900, #ff6600);
+            --flipkart: linear-gradient(135deg, #2874f0, #1a5bb9);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .logo i {
+            font-size: 2.8rem;
+            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.15);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        #searchForm {
+            display: flex;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #product {
+            flex: 1;
+            padding: 1.2rem 1.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        #product:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        #searchForm button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #searchForm button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        #searchForm button:active {
+            transform: translateY(-1px);
+        }
+
+        #searchForm button i {
+            font-size: 1.2rem;
+        }
+
+        .results-container {
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 20px;
+            color: var(--dark);
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 80%;
+            width: 6px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .results {
+            display: flex;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 380px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+
+        .amazon::before {
+            background: var(--amazon);
+        }
+
+        .flipkart::before {
+            background: var(--flipkart);
+        }
+
+        .platform {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .platform-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .amazon .platform-icon {
+            background: var(--amazon);
+        }
+
+        .flipkart .platform-icon {
+            background: var(--flipkart);
+        }
+
+        .platform h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .image-container {
+            height: 220px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .image-container img {
+            transform: scale(1.05);
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            color: var(--dark);
+            min-height: 70px;
+        }
+
+        .price-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .price-section {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .price-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .mrp-value {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+
+        .discount-value {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stars {
+            color: var(--warning);
+        }
+
+        .rating-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .product-link {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.9rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .amazon .product-link {
+            background: var(--amazon);
+        }
+
+        .flipkart .product-link {
+            background: var(--flipkart);
+        }
+
+        .product-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .product-link:active {
+            transform: translateY(-1px);
+        }
+
+        .product-link i {
+            margin-left: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .empty-state h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 2rem 0;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(67, 97, 238, 0.2);
+            border-top: 6px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 900px) {
+            .results {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .card {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            #searchForm {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .search-section {
+                padding: 1.8rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-balance-scale-right"></i>
+            </div>
+            <h1>Smart Price Comparison</h1>
+            <p class="subtitle">Compare prices across top retailers to find the best deals instantly. Save money on
+                every purchase!</p>
+        </header>
+
+        <section class="search-section">
+            <form id="searchForm">
+                <input type="text" id="product" name="product" placeholder="Enter product name (e.g. Realme Narzo 70 Pro)"
+                    required>
+                <button type="submit">
+                    <i class="fas fa-search"></i> Search Deals
+                </button>
+            </form>
+        </section>
+
+        <div class="loader" id="loader">
+            <div class="loader-spinner"></div>
+            <h3>Searching for the best deals...</h3>
+            <p>Scanning Amazon, Flipkart and other retailers</p>
+        </div>
+
+        <div class="results-container">
+            <h2 class="section-title">Comparison Results</h2>
+            <div class="results" id="results">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 PriceCompare Pro | Save Smart, Shop Smarter</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById("searchForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const product = document.getElementById("product").value;
+            const loader = document.getElementById("loader");
+            const resultsDiv = document.getElementById("results");
+
+            // Show loader and hide previous results
+            loader.style.display = 'block';
+            resultsDiv.innerHTML = '';
+
+            // Fetch actual data from your endpoint
+            fetch("/search", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ product: product })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    // Hide loader
+                    loader.style.display = 'none';
+
+                    // Clear previous results
+                    resultsDiv.innerHTML = '';
+
+                    if (data && data.length > 0) {
+                        data.forEach((site, index) => {
+                            if (!site) return;
+
+                            const card = document.createElement("div");
+                            card.className = `card ${site.platform.toLowerCase()}`;
+
+                            // Generate star rating HTML
+                            const ratingValue = parseFloat(site.rating);
+                            const fullStars = Math.floor(ratingValue);
+                            const halfStar = ratingValue % 1 >= 0.5 ? 1 : 0;
+                            let starsHTML = '';
+
+                            for (let i = 0; i < fullStars; i++) {
+                                starsHTML += '<i class="fas fa-star"></i>';
+                            }
+
+                            if (halfStar) {
+                                starsHTML += '<i class="fas fa-star-half-alt"></i>';
+                            }
+
+                            for (let i = 0; i < 5 - fullStars - halfStar; i++) {
+                                starsHTML += '<i class="far fa-star"></i>';
+                            }
+
+                            card.innerHTML = `
+              <div class="platform">
+                <div class="platform-icon">
+                  <i class="fab fa-${site.platform.toLowerCase()}"></i>
+                </div>
+                <h3>${site.platform}</h3>
+              </div>
+              <div class="image-container">
+                <img src="${site.image_url}" alt="${site.title}">
+              </div>
+              <h3 class="product-title">${site.title}</h3>
+              <div class="price-info">
+                <div class="price-section">
+                  <div class="price-label">Current Price</div>
+                  <div class="price-value">${site.price}</div>
+                </div>
+                <div class="price-section">
+                  <div class="price-label">MRP</div>
+                  <div class="price-value mrp-value">${site.mrp}</div>
+                </div>
+                <div class="price-section">
+                  <div class="price-label">Discount</div>
+                  <div class="price-value discount-value">${site.discount}</div>
+                </div>
+              </div>
+              <div class="rating">
+                <div class="stars">${starsHTML}</div>
+                <div class="rating-value">${site.rating}/5</div>
+              </div>
+              <a href="${site.link}" class="product-link" target="_blank">
+                View on ${site.platform} <i class="fas fa-external-link-alt"></i>
+              </a>
+              <br><br>
+<a 
+  href="/details?platform=${site.platform}&title=${encodeURIComponent(site.title)}&price=${encodeURIComponent(site.price)}&mrp=${encodeURIComponent(site.mrp)}&discount=${encodeURIComponent(site.discount)}&rating=${encodeURIComponent(site.rating)}&image_url=${encodeURIComponent(site.image_url)}"
+  target="_blank"
+  class="product-link"
+  style="background-color: #6c757d;"
+>
+  More Info <i class="fas fa-info-circle"></i>
+</a>
+            `;
+
+                            resultsDiv.appendChild(card);
+                        });
+                    } else {
+                        resultsDiv.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-search"></i>
+              <h3>No products found</h3>
+              <p>We couldn't find any products matching "${product}". Try searching for something else or check your spelling.</p>
+            </div>
+          `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    loader.style.display = 'none';
+                    resultsDiv.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Connection Error</h3>
+            <p>We couldn't retrieve price information. Please check your connection and try again.</p>
+          </div>
+        `;
+                });
+        });
+    </script>
+</body>
+
+</html>

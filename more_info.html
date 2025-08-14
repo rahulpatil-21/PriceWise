@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Wireless Headphones - Product Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --indigo: #4b0082;
+      --saffron: #FF9933;
+      --green: #138808;
+      --light: #ffffff;
+      --dark: #2d3748;
+      --gray: #718096;
+      --light-gray: #f8fafc;
+      --success: #4cc9f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+      --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f4f8 0%, #e6f0ff 100%);
+      min-height: 100vh;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .dashboard-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+    
+    .dashboard-header h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, var(--indigo), var(--saffron));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .dashboard-header h1:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: linear-gradient(45deg, var(--indigo), var(--green));
+      border-radius: 4px;
+    }
+    
+    .dashboard-header p {
+      color: var(--gray);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 1.5rem auto 0;
+      line-height: 1.6;
+    }
+    
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+    
+    .image-card {
+      flex: 1;
+      min-width: 300px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      animation: fadeInUp 0.6s ease-out;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      position: relative;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .image-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(67, 97, 238, 0.15);
+    }
+    
+    .product-image-container {
+      position: relative;
+      height: 350px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e6f0ff 0%, #f0f7ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .product-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.8s ease;
+      z-index: 2;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+    }
+    
+    .image-card:hover .product-image {
+      transform: scale(1.05);
+    }
+    
+    .info-card {
+      flex: 2;
+      min-width: 300px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      animation: fadeInUp 0.6s ease-out 0.2s;
+      animation-fill-mode: both;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      padding: 2rem;
+    }
+    
+    .info-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(67, 97, 238, 0.15);
+    }
+    
+    .info h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      position: relative;
+      padding-bottom: 12px;
+      animation: fadeIn 0.8s ease;
+    }
+    
+    .info h1:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--indigo);
+      border-radius: 3px;
+    }
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      padding: 1.2rem;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 16px;
+      transition: var(--transition);
+      animation: fadeIn 0.8s ease;
+      border: 1px solid rgba(75, 0, 130, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(5px);
+    }
+    
+    .info-item:hover {
+      background: rgba(75, 0, 130, 0.05);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(75, 0, 130, 0.1);
+      border: 1px solid rgba(75, 0, 130, 0.2);
+    }
+    
+    .info-item i {
+      font-size: 1.5rem;
+      color: var(--indigo);
+      margin-right: 1rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(75, 0, 130, 0.1);
+      border-radius: 10px;
+      transition: var(--transition);
+    }
+    
+    .info-item:hover i {
+      background: rgba(75, 0, 130, 0.2);
+      transform: scale(1.1);
+    }
+    
+    .info-content {
+      flex: 1;
+    }
+    
+    .info-item strong {
+      display: block;
+      font-weight: 500;
+      color: var(--gray);
+      margin-bottom: 5px;
+      font-size: 0.9rem;
+    }
+    
+    .info-item span {
+      font-size: 1.2rem;
+      font-weight: 600;
+      display: block;
+      color: var(--dark);
+    }
+    
+    .price-container {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      animation: fadeIn 0.8s ease;
+      border: 1px solid rgba(75, 0, 130, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(5px);
+    }
+    
+    .price-tag {
+      background: linear-gradient(45deg, var(--indigo), var(--saffron));
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-right: 1.5rem;
+      box-shadow: 0 8px 20px rgba(75, 0, 130, 0.3);
+      transition: var(--transition);
+    }
+    
+    .price-tag:hover {
+      transform: scale(1.05);
+    }
+    
+    .mrp {
+      text-decoration: line-through;
+      color: var(--gray);
+      font-size: 1.3rem;
+      margin-right: 1.5rem;
+    }
+    
+    .discount-badge {
+      background: var(--green);
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(19, 136, 8, 0.3);
+      transition: var(--transition);
+    }
+    
+    .discount-badge:hover {
+      transform: translateY(-3px);
+    }
+    
+    .rating {
+      display: flex;
+      align-items: center;
+      padding: 1.2rem 1.5rem;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      animation: fadeIn 0.8s ease;
+      border: 1px solid rgba(255, 215, 0, 0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(5px);
+      margin-bottom: 2rem;
+    }
+    
+    .stars {
+      color: #FFD700;
+      font-size: 1.7rem;
+      margin-right: 20px;
+      display: flex;
+      gap: 5px;
+    }
+    
+    .rating-value {
+      font-weight: 700;
+      font-size: 1.5rem;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      margin-right: 20px;
+    }
+    
+    .reviews-count {
+      color: var(--gray);
+      font-weight: 500;
+      font-size: 1.1rem;
+    }
+    
+    .chart-section {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .chart-section h2 {
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      font-size: 1.5rem;
+      position: relative;
+      padding-bottom: 12px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .chart-section h2:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--indigo);
+      border-radius: 3px;
+    }
+    
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .chart-card {
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      padding: 1.8rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      transition: var(--transition);
+      animation: fadeIn 0.8s ease;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      backdrop-filter: blur(5px);
+    }
+    
+    .chart-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+      border: 1px solid rgba(75, 0, 130, 0.15);
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.8rem;
+    }
+    
+    .chart-header h3 {
+      font-size: 1.25rem;
+      color: var(--dark);
+      position: relative;
+      padding-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .chart-header h3:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 35px;
+      height: 3px;
+      background: var(--indigo);
+      border-radius: 3px;
+    }
+    
+    .chart-container {
+      height: 250px;
+      width: 100%;
+      position: relative;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1.5rem;
+      padding: 14px 32px;
+      background: linear-gradient(45deg, var(--indigo), var(--saffron));
+      color: white;
+      text-decoration: none;
+      border-radius: 16px;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: 0 8px 25px rgba(75, 0, 130, 0.3);
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      font-size: 1.1rem;
+    }
+    
+    .btn i {
+      margin-right: 10px;
+      transition: var(--transition);
+    }
+    
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(75, 0, 130, 0.4);
+      background: linear-gradient(45deg, var(--saffron), var(--indigo));
+    }
+    
+    .btn:hover i {
+      transform: translateX(-5px);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0% { 
+        transform: scale(0.98);
+        opacity: 0.7;
+      }
+      50% { 
+        transform: scale(1.02);
+        opacity: 0.9;
+      }
+      100% { 
+        transform: scale(0.98);
+        opacity: 0.7;
+      }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .floating {
+      animation: float 4s ease-in-out infinite;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      body {
+        padding: 1.5rem;
+      }
+      
+      .dashboard-header h1 {
+        font-size: 2rem;
+      }
+      
+      .product-image-container {
+        height: 280px;
+      }
+      
+      .price-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .card-container {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .dashboard-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .price-tag {
+        font-size: 1.5rem;
+        padding: 0.7rem 1.5rem;
+      }
+      
+      .mrp {
+        font-size: 1.1rem;
+      }
+      
+      .discount-badge {
+        font-size: 1rem;
+      }
+      
+      .info-item {
+        padding: 1rem;
+      }
+    }
+    
+    /* Decorative elements */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    
+    .circle-1 {
+      width: 120px;
+      height: 120px;
+      background: rgba(75, 0, 130, 0.05);
+      top: 20px;
+      left: 20px;
+    }
+    
+    .circle-2 {
+      width: 80px;
+      height: 80px;
+      background: rgba(75, 0, 130, 0.07);
+      bottom: 40px;
+      right: 30px;
+    }
+    
+    .circle-3 {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 153, 51, 0.1);
+      top: 50%;
+      left: 30%;
+    }
+    
+    .indian-pattern {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0.03;
+      z-index: -1;
+      background-image: 
+        radial-gradient(circle at 10% 20%, var(--saffron) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, var(--green) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, var(--indigo) 0%, transparent 30%);
+    }
+    
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--indigo);
+      z-index: 10;
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  thead {
+    background-color: #343a40;
+    color: white;
+  }
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  td:nth-child(2) {
+    color: green;
+    font-weight: bold;
+  }
+  </style>
+</head>
+<body>
+  <div class="indian-pattern"></div>
+  
+  
+  <div class="container">
+    <div class="dashboard-header">
+      <h1>Product Analytics Dashboard</h1>
+      <p>Comprehensive insights and metrics for premium wireless headphones</p>
+    </div>
+    
+    <div class="card-container">
+      <div class="image-card floating">
+        <div class="product-image-container">
+          <div class="circle circle-1"></div>
+          <div class="circle circle-2"></div>
+          <div class="circle circle-3"></div>
+          <img src="{{image_url}}" 
+               alt="Premium Wireless Headphones" class="product-image">
+        </div>
+       
+        <div class="price-container">
+          <span class="price-tag">{{price}}</span>
+          <span class="mrp">{{mrp}}</span>
+          <h3>📈 4-Month Price Forecast</h3>
+          <div class="pricepredict">
+   <table border="1">
+    
+ 
+  <br/>
+<table class="table table-hover table-bordered text-center" style="margin-top: 20px;">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">📅 Month</th>
+      <th scope="col">💰 Predicted Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in future_predictions %}
+      <tr>
+        <td><strong>{{ row.Month }}</strong></td>
+        <td style="color: green;">₹{{ "%.2f"|format(row.PredictedPrice) }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</table>
+</div
+
+          <span class="discount-badge"></span>
+        </div>
+      </div>
+      
+      <div class="info-card floating">
+        <div class="info">
+          <h1>{{title}}</h1>
+
+
+          
+          <div class="info-grid">
+            <div class="info-item">
+              <i class="fas fa-store"></i>
+              <div class="info-content">
+                <strong>Platform</strong>
+                <span>{{platform}}</span>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <i class="fas fa-tag"></i>
+              <div class="info-content">
+                <strong>MRP</strong>
+                <span>{{mrp}}</span>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <i class="fas fa-percentage"></i>
+              <div class="info-content">
+                <strong>Discount</strong>
+                <span>{{discount}}</span>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <i class="fas fa-star"></i>
+              <div class="info-content">
+                <strong>Rating</strong>
+                <span>{{rating}}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="rating">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="rating-value">{{rating}}</span>
+            <span class="reviews-count">(1,256 reviews)</span>
+          </div>
+          
+          <div class="chart-section">
+            <h2>Product Analytics</h2>
+            
+            <div class="chart-grid">
+              <div class="chart-card">
+                <div class="chart-header">
+                  <h3>Price Trend (90 Days)</h3>
+                  <i class="fas fa-chart-line" style="color: var(--indigo); font-size: 1.5rem;"></i>
+                </div>
+                <div class="chart-container">
+                  <canvas id="priceChart"></canvas>
+                </div>
+              </div>
+              
+              <div class="chart-card">
+                <div class="chart-header">
+                  <h3>Review Distribution</h3>
+                  <i class="fas fa-chart-pie" style="color: var(--saffron); font-size: 1.5rem;"></i>
+                </div>
+                <div class="chart-container">
+                  <canvas id="reviewChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <a class="btn" href="/">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Price Trend Chart
+      const priceCtx = document.getElementById('priceChart').getContext('2d');
+      const priceChart = new Chart(priceCtx, {
+        type: 'line',
+        data: {
+          labels: ['3M Ago', '2.5M', '2M', '1.5M', '1M', '2W Ago', '1W Ago', '3 Days Ago', 'Yesterday', 'Today'],
+          datasets: [{
+            label: 'Price History',
+            data: [15999, 14999, 13999, 12999, 11999, 11499, 11299, 11099, 10999, 10999],
+            borderColor: '#4b0082',
+            backgroundColor: 'rgba(75, 0, 130, 0.1)',
+            borderWidth: 3,
+            pointBackgroundColor: '#fff',
+            pointBorderColor: '#4b0082',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleFont: {
+                size: 14
+              },
+              bodyFont: {
+                size: 13
+              },
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return `Price: ₹${context.parsed.y.toLocaleString('en-IN')}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              },
+              ticks: {
+                callback: function(value) {
+                  return '₹' + value.toLocaleString('en-IN');
+                },
+                font: {
+                  size: 11
+                }
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                font: {
+                  size: 11
+                }
+              }
+            }
+          },
+          animation: {
+            duration: 2000,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+      
+      // Review Distribution Chart
+      const reviewCtx = document.getElementById('reviewChart').getContext('2d');
+      const reviewChart = new Chart(reviewCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['5 Stars', '4 Stars', '3 Stars', '2 Stars', '1 Star'],
+          datasets: [{
+            label: 'Number of Reviews',
+            data: [856, 215, 85, 45, 55],
+            backgroundColor: [
+              'rgba(75, 0, 130, 0.8)',
+              'rgba(75, 0, 130, 0.65)',
+              'rgba(75, 0, 130, 0.5)',
+              'rgba(75, 0, 130, 0.35)',
+              'rgba(75, 0, 130, 0.2)'
+            ],
+            borderColor: '#fff',
+            borderWidth: 2,
+            hoverOffset: 15
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                padding: 20,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                font: {
+                  size: 12
+                }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = Math.round((value / total) * 100);
+                  return `${label}: ${value} reviews (${percentage}%)`;
+                }
+              }
+            }
+          },
+          cutout: '65%',
+          animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 2000,
+            easing: 'easeOutQuart'
+          }
+        }
+      });
+      
+      // Add floating animation to cards on hover
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.classList.remove('floating');
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          card.classList.add('floating');
+        });
+      });
+      
+      // Animate info items on scroll
+      const infoItems = document.querySelectorAll('.info-item');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeIn 0.8s ease forwards';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      infoItems.forEach(item => {
+        item.style.opacity = '0';
+        observer.observe(item);
+      });
+    });
+  </script>
+</body>
+</html>
